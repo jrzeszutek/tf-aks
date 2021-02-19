@@ -114,7 +114,7 @@ variable "load_balancer_sku" {
 }
 
 variable "outbound_ips" {
-  type        = string
+  type        = list
 }
 
 provider "azurerm" {
