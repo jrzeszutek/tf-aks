@@ -24,12 +24,14 @@ variable "aks_name" {
   description = "AKS's name"
 }
 
-variable "ARM_CLIENT_ID" {
+variable "azure_client_id" {
   type = string
+  description = "Service Principal Client ID"
 }
 
-variable "ARM_CLIENT_SECRET" {
+variable "azure_client_secret" {
   type = string
+  description = "Service Principal Client Secret"
 }
 
 provider "azurerm" {
@@ -50,8 +52,8 @@ resource "azurerm_kubernetes_cluster" "aks" {
   }
 
   service_principal {
-    client_id     = var.ARM_CLIENT_ID
-    client_secret = var.ARM_CLIENT_SECRET
+    client_id     = var.azure_client_id
+    client_secret = var.azure_client_secret
   }
 
   role_based_access_control {
