@@ -34,13 +34,37 @@ variable "azure_client_secret" {
   description = "Service Principal Client Secret"
 }
 
+variable "kubernetes_version" {
+  type        = string
+  default     = null
+}
+
+variable "dns_prefix" {
+  type = string
+}
+
 variable "admin_username" {
   default     = "azureuser"
   type        = string
 }
 
+variable "public_key_content" {
+  type        = string
+  default     = ""
+}
+
+variable "agents_pool_name" {
+  type        = string
+  default     = "nodepool"
+}
+
+variable "agents_type" {
+  type        = string
+  default     = "VirtualMachineScaleSets"
+}
+
 variable "agents_size" {
-  default     = "Standard_D2s_v3"
+  default     = "Standard_B2s"
   type        = string
 }
 
@@ -49,9 +73,9 @@ variable "agents_count" {
   default     = 2
 }
 
-variable "public_key_content" {
-  type        = string
-  default     = ""
+variable "agents_disk_size" {
+  type        = number
+  default     = 50
 }
 
 variable "tags" {
@@ -62,11 +86,6 @@ variable "tags" {
 variable "vnet_subnet_id" {
   type        = string
   default     = null
-}
-
-variable "os_disk_size_gb" {
-  type        = number
-  default     = 50
 }
 
 variable "sku_tier" {
@@ -84,37 +103,18 @@ variable "network_policy" {
   default     = null
 }
 
-variable "net_profile_outbound_type" {
+variable "outbound_type" {
   type        = string
   default     = "loadBalancer"
 }
 
-variable "kubernetes_version" {
-  type        = string
-  default     = null
-}
-
-variable "agents_pool_name" {
-  type        = string
-  default     = "nodepool"
-}
-
-variable "agents_type" {
-  type        = string
-  default     = "VirtualMachineScaleSets"
-}
-
 variable "load_balancer_sku" {
   type        = string
-  default     = "Standard"
+  default     = "standard"
 }
 
-variable "outbound_ip_address_ids" {
+variable "outbound_ips" {
   type        = string
-}
-
-variable "dns_prefix" {
-  type = string
 }
 
 provider "azurerm" {
@@ -141,7 +141,7 @@ resource "azurerm_kubernetes_cluster" "aks" {
     name                  = var.agents_pool_name
     node_count            = var.agents_count
     vm_size               = var.agents_size
-    os_disk_size_gb       = var.os_disk_size_gb
+    os_disk_size_gb       = var.agents_disk_size
     vnet_subnet_id        = var.vnet_subnet_id
     type                  = var.agents_type
   }
@@ -164,10 +164,10 @@ resource "azurerm_kubernetes_cluster" "aks" {
   network_profile {
     network_plugin      = var.network_plugin
     network_policy      = var.network_policy
-    outbound_type       = var.net_profile_outbound_type
+    outbound_type       = var.outbound_type
     loadBalancerSku     = var.load_balancer_sku
     loadBalancerProfile {
-      outbound_ip_address_ids = var.outbound_ip_address_ids
+      outbound_ip_address_ids = var.outbound_ips
     }
   }
 
