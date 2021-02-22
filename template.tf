@@ -108,6 +108,16 @@ variable "service_cidr" {
   default     = null
 }
 
+variable "docker_bridge_cidr" {
+  type        = string
+  default     = null
+}
+
+variable "dns_service_ip" {
+  type        = string
+  default     = null
+}
+
 variable "outbound_type" {
   type        = string
   default     = "loadBalancer"
@@ -166,6 +176,8 @@ resource "azurerm_kubernetes_cluster" "aks" {
     network_plugin      = var.network_plugin
     network_policy      = var.network_policy
     service_cidr        = var.service_cidr
+    docker_bridge_cidr  = var.docker_bridge_cidr
+    dns_service_ip      = var.dns_service_ip
     outbound_type       = var.outbound_type
     load_balancer_sku   = var.load_balancer_sku
   }
