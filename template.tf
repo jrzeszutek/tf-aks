@@ -113,10 +113,6 @@ variable "load_balancer_sku" {
   default     = "standard"
 }
 
-variable "outbound_ips" {
-  type        = list
-}
-
 provider "azurerm" {
   features {}
 }
@@ -165,10 +161,7 @@ resource "azurerm_kubernetes_cluster" "aks" {
     network_plugin      = var.network_plugin
     network_policy      = var.network_policy
     outbound_type       = var.outbound_type
-    load_balancer_sku     = var.load_balancer_sku
-    load_balancer_profile {
-      outbound_ip_address_ids = var.outbound_ips
-    }
+    load_balancer_sku   = var.load_balancer_sku
   }
 
   tags = var.tags
